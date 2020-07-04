@@ -66,6 +66,19 @@ def alert_notification(name, link):
     embed.post()
 
 '''
+Sends a discord alert when script starts
+'''
+def alert_start():
+    embed = Webhook(webhook, color=123123)
+
+    embed.set_author(name='NSE Tropicals')
+    embed.set_desc("Script started...")
+
+    embed.set_footer(text='Created by weivienne', ts=True)
+
+    embed.post()
+
+'''
 Send a discord alert when the monitor fail to connect to a link
 '''
 def alert_crash(link):
@@ -100,9 +113,9 @@ def check_site(site):
         name = xml.find("h1", {"class": "product_title"})
 
         if (xml.findAll("p", {"class": "stock"}) and xml.findAll("p", {"class": "out-of-stock"})):
-            log('i', "Out of stock: " + name.string.encode('utf-8'))
+            log('i', "Out of stock: " + str(name.string.encode('utf-8')))
         else:
-            log('i', "In stock: " + name.string.encode('utf-8'))
+            log('i', "In stock: " + str(name.string.encode('utf-8')))
 
             alert_notification(name, link)      # Send alert
             print(".")
@@ -128,6 +141,9 @@ if(__name__ == "__main__"):
     websites = read_from_txt("websites.txt")
     total_sites = len(websites)
     log('i', str(total_sites) + " sites loaded.")
+
+    # Send start notification
+    alert_start()
 
     # Loop through each Shopify site
     for site in websites:
