@@ -1,5 +1,7 @@
-https://www.nsetropicals.com/product/philodendron-gloriosum-large-round-form/
-https://www.nsetropicals.com/product/anthurium-red-crystallinum/
-https://www.nsetropicals.com/product/philodendron-pastazanum/
-https://www.nsetropicals.com/product/philodendron-plowmanii/
-https://www.nsetropicals.com/product/anthurium-forgetii-seedling/
+nse https://www.nsetropicals.com/product/philodendron-nangaritense/
+nse https://www.nsetropicals.com/product/anthurium-red-crystallinum/
+nse https://www.nsetropicals.com/product/philodendron-plowmanii/
+logees https://www.logees.com/philodendron-pink-princess-philodendron-erubescens.html
+logees https://www.logees.com/black-gold-philodendron-philodendron-melanochrysum-2181.html
+logees https://www.logees.com/variegated-mexican-breadfruit-monstera-deliciosa-variegata.html
+logees https://www.logees.com/ecuador-philodendron-philodendron-ventricosum.html

@@ -52,14 +52,14 @@ def read_from_txt(path):
 '''
 Sends a discord alert when an item is back in stock
 '''
-def alert_notification(name, link):
+def alert_notification(name, website, link):
 
     embed = Webhook(webhook, color=123123)
 
-    embed.set_author(name='NSE Tropicals')
-    embed.set_desc("RESTOCK: " + name.get_text())
+    embed.set_author(name=website)
+    embed.set_desc("RESTOCK: " + name)
 
-    embed.add_field(name=name.get_text(), value=link)
+    embed.add_field(name=name, value=link)
 
     embed.set_footer(text='Created by weivienne', ts=True)
 
@@ -71,7 +71,7 @@ Sends a discord alert when script starts
 def alert_start():
     embed = Webhook(webhook, color=123123)
 
-    embed.set_author(name='NSE Tropicals')
+    embed.set_author(name='Plant Restock')
     embed.set_desc("Script started...")
 
     embed.set_footer(text='Created by weivienne', ts=True)
@@ -93,13 +93,17 @@ def check_site(site):
     while(True):
         log('i', "Monitoring site <" + site + ">.")
         
-        link = site
+        website_link = site.split()
+
+        website = website_link[0]
+        link = website_link[1]
+        
         working = False
 
         # Get the products on the site
         try:
             headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
-            response = requests.get(link, timeout=3, verify=False, headers=headers)
+            response = requests.get(link, timeout=10, verify=False, headers=headers)
         except Exception as e:
             log('e', "Connection to URL <" + link + "> failed.")
             log('e', str(e))
@@ -109,23 +113,42 @@ def check_site(site):
         xml = soup(response.text, "html.parser")
         # print(xml)
 
-        # Get the name of the restock item
-        name = xml.find("h1", {"class": "product_title"})
+        # Portion for NSE Tropicals
+        if (website == "nse"):
+            # Get the name of the restock item
+            name = xml.find("h1", {"class": "product_title"})
+            name = str(name.string.encode('utf-8'))
 
-        if (xml.findAll("p", {"class": "stock"}) and xml.findAll("p", {"class": "out-of-stock"})):
-            log('i', "Out of stock: " + str(name.string.encode('utf-8')))
-        else:
-            log('i', "In stock: " + str(name.string.encode('utf-8')))
+            if (xml.findAll("p", {"class": "stock"}) and xml.findAll("p", {"class": "out-of-stock"})):
+                log('i', "Out of stock: " + name)
+            else:
+                log('i', "In stock: " + name)
 
-            alert_notification(name, link)      # Send alert
+                alert_notification(name, website, link)      # Send alert
+                print(".")
+                sys.exit()
+
             print(".")
-            sys.exit()
+
+        # Portion for Logee's
+        elif (website == "logees"):
+            # Get the name of the restock item
+            name = xml.find("div", {"class": "product-name"}).find("h1")
+            name = str(name.string.encode('utf-8'))
+
+            if (xml.findAll("div", {"class": "add-to-cart"})):
+                log('i', "In stock: " + name)
+
+                alert_notification(name, website, link)      # Send alert
+                print(".")
+                sys.exit()
+            else:
+                log('i', "Out of stock: " + name)
 
         print(".")
 
         # Wait the specified timeframe before checking the site again
         time.sleep(delay)
-
 
 ''' --------------------------------- RUN --------------------------------- '''
 
